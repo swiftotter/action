@@ -18,8 +18,8 @@ async function ssh() {
     fs.mkdirSync(sshHomeDir)
   }
 
-  let privateKey = core.getInput('private-key').replace('/\r/g', '').trim() + '\n'
-  if (privateKey !== '') {
+  let privateKeyInput = core.getInput('private-key').replace('/\r/g', '').trim()
+  if (privateKeyInput !== '') {
     let authSock = '/tmp/ssh-auth.sock'
     execa.sync('ssh-agent', ['-a', authSock])
     core.exportVariable('SSH_AUTH_SOCK', authSock)
