@@ -16,7 +16,7 @@
     with:
       # Private key for connecting to remote hosts. To generate private key:
       # `ssh-keygen -o -t rsa -C 'action@deployer.org'`.
-      # Required.
+      # Optional.
       private-key: ${{ secrets.PRIVATE_KEY }}
 
       # The deployer task to run. For example:
