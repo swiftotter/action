@@ -4,13 +4,14 @@ description: 'Deploy with Deployer'
 
 inputs:
 
-  private-key:
-    required: true
-    description: The private key for connecting to remote hosts.
-
   dep:
     required: true
     description: The command.
+
+  private-key:
+    required: false
+    default: ''
+    description: The private key for connecting to remote hosts.
 
   known-hosts:
     required: false
@@ -32,8 +33,18 @@ inputs:
     default: ''
     description: Path to local Deployer binary.
 
+  ansi:
+    required: false
+    default: 'true'
+    description: Whether to enable ANSI output.
+
+  verbosity:
+    required: false
+    default: '-v'
+    description: Verbosity level Can be -v, -vv or -vvv.
+
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'index.js'
 
 branding:

@@ -18,13 +18,13 @@ async function ssh() {
     fs.mkdirSync(sshHomeDir)
   }
 
-  let privateKeyInput = core.getInput('private-key').replace('/\r/g', '').trim()
-  if (privateKeyInput !== '') {
-    let authSock = '/tmp/ssh-auth.sock'
-    execa.sync('ssh-agent', ['-a', authSock])
-    core.exportVariable('SSH_AUTH_SOCK', authSock)
+  let authSock = '/tmp/ssh-auth.sock'
+  execa.sync('ssh-agent', ['-a', authSock])
+  core.exportVariable('SSH_AUTH_SOCK', authSock)
 
-    let privateKey = core.getInput('private-key').replace('/\r/g', '').trim() + '\n'
+  let privateKey = core.getInput('private-key')
+  if (privateKey !== '') {
+    privateKey = privateKey.replace('/\r/g', '').trim() + '\n'
     execa.sync('ssh-add', ['-'], {input: privateKey})
   }
 
@@ -48,7 +48,7 @@ async function dep() {
   let dep = core.getInput('deployer-binary')
 
   if (dep === '')
-  for (let c of ['vendor/bin/dep', 'deployer.phar']) {
+  for (let c of ['vendor/bin/deployer.phar', 'vendor/bin/dep', 'deployer.phar']) {
     if (fs.existsSync(c)) {
       dep = c
       console.log(`Using "${c}".`)
@@ -73,7 +73,7 @@ async function dep() {
         }
       }
       if (url === null) {
-        console.error(`The version "${version}"" does not found in the "https://deployer.org/manifest.json" file."`)
+        console.error(`The version "${version}"" does not exist in the "https://deployer.org/manifest.json" file."`)
       } else {
         console.log(`Downloading "${url}".`)
         execa.commandSync(`curl -LO ${url}`)
@@ -84,8 +84,10 @@ async function dep() {
   }
 
   let cmd = core.getInput('dep')
+  let ansi = core.getBooleanInput('ansi') ? '--ansi' : '--no-ansi';
+  let verbosity = core.getInput('verbosity');
 
-  let p = execa.command(`php ${dep} --ansi -v ${cmd}`)
+  let p = execa.command(`php ${dep} --no-interaction ${ansi} ${verbosity} ${cmd}`)
   p.stdout.pipe(process.stdout)
   p.stderr.pipe(process.stderr)
 

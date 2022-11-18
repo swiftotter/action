@@ -4,8 +4,8 @@
   - name: Deploy
     uses: deployphp/action@v1
     with:
-      private-key: ${{ secrets.PRIVATE_KEY }}
       dep: deploy
+      private-key: ${{ secrets.PRIVATE_KEY }}
 ```
 
 ## Inputs
@@ -14,15 +14,15 @@
   - name: Deploy
     uses: deployphp/action@v1
     with:
-      # Private key for connecting to remote hosts. To generate private key:
-      # `ssh-keygen -o -t rsa -C 'action@deployer.org'`.
-      # Optional.
-      private-key: ${{ secrets.PRIVATE_KEY }}
-
       # The deployer task to run. For example:
       # `deploy all`.
       # Required.
       dep: deploy
+
+      # Private key for connecting to remote hosts. To generate private key:
+      # `ssh-keygen -o -t rsa -C 'action@deployer.org'`.
+      # Optional.
+      private-key: ${{ secrets.PRIVATE_KEY }}
 
       # Content of `~/.ssh/known_hosts` file. The public SSH keys for a
       # host may be obtained using the utility `ssh-keyscan`. 
@@ -40,6 +40,7 @@
     
       # Deployer version to download from deployer.org.
       # First, the action will check for Deployer binary at those paths:
+      # - `vendor/bin/deployer.phar`
       # - `vendor/bin/dep`
       # - `deployer.phar`
       # If the binary not found, phar version will be downloaded from
@@ -50,6 +51,14 @@
       # You can specify path to your local Deployer binary in the repo.
       # Optional.
       deployer-binary: "bin/dep"
+
+      # You can choose to disable ANSI output.
+      # Optional. Defaults to true.
+      ansi: false
+
+      # You can specify the output verbosity level.
+      # Optional. Defaults to -v.
+      verbosity: -vvv
 ```
 
 ## Example
@@ -78,6 +87,6 @@ jobs:
       - name: Deploy
         uses: deployphp/action@v1
         with:
-          private-key: ${{ secrets.PRIVATE_KEY }}
           dep: deploy
+          private-key: ${{ secrets.PRIVATE_KEY }}
 ```
